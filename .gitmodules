@@ -1,0 +1,3 @@
+[submodule "src/math"]
+	path = src/math
+	url = https://github.com/sekelsta/math.git

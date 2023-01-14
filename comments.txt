@@ -1,0 +1,4 @@
+TODO: marks something I should do and don't want to forget about
+TO_LATER_DO: Something that maybe should be done eventually
+TO_OPTIMIZE: marks a potetial performance improvement
+DEBUG: marks debugging code to remove/change later
