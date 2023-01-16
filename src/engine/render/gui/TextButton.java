@@ -2,6 +2,7 @@ package traingame.engine.render.gui;
 
 import java.awt.Color;
 
+import traingame.engine.render.SpriteBatch;
 import traingame.engine.render.text.BitmapFont;
 
 public class TextButton extends TextElement {
@@ -25,7 +26,7 @@ public class TextButton extends TextElement {
     }
 
     @Override
-    public void blit(boolean focused) {
+    public void blit(SpriteBatch spriteBatch, boolean focused) {
         if (focused) {
             font.blit(text, x, y, 
                 HIGHLIGHT_COLOR.getRed() / 255f, HIGHLIGHT_COLOR.getGreen() / 255f, HIGHLIGHT_COLOR.getBlue() / 255f);
