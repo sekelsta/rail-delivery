@@ -1,6 +1,5 @@
 package traingame.render;
 
-import java.awt.Font;
 import java.io.IOException;
 import java.util.*;
 
@@ -15,23 +14,30 @@ import shadowfox.math.Vector2f;
 public class Overlay {
     private static final double scale = 1.0;
 
-    private NewGameScreen screen;
+    private Deque<Screen> screenStack = new ArrayDeque<>();
     private double xPointer, yPointer;
 
     public Overlay(Game game) {
-        screen = new NewGameScreen(game);
+        screenStack.push(new NewGameScreen(game));
     }
 
-    public void pushScreen(NewGameScreen screen) {
-        this.screen = screen;
+    public void pushScreen(Screen screen) {
+        screenStack.push(screen);
+        screen.positionPointer(xPointer, yPointer);
     }
 
     public void popScreen() {
-        screen = null;
+        screenStack.pop();
+    }
+
+    public void popScreenIfEquals(Screen screen) {
+        if (hasScreen() && screenStack.peek().equals(screen)) {
+            popScreen();
+        }
     }
 
     public boolean hasScreen() {
-        return screen != null;
+        return screenStack.size() > 0;
     }
 
     public static double getScale() {
@@ -42,53 +48,65 @@ public class Overlay {
         xPointer = xPos * scale;
         yPointer = yPos * scale;
         if (hasScreen()) {
-            screen.positionPointer(xPointer, yPointer);
+            screenStack.peek().positionPointer(xPointer, yPointer);
+        }
+    }
+
+    public void escape(Game game) {
+        if (screenStack.peek() instanceof NewGameScreen) {
+            return;
+        }
+
+        if (hasScreen()) {
+            popScreen();
+        }
+        else {
+            pushScreen(new GameMenuScreen(game));
         }
     }
 
     public boolean trigger() {
         if (hasScreen()) {
-            return screen.trigger();
+            return screenStack.peek().trigger();
         }
         return false;
     }
 
     public boolean click() {
         if (hasScreen()) {
-            return screen.click(xPointer, yPointer);
+            return screenStack.peek().click(xPointer, yPointer);
         }
         return false;
     }
 
     public void up() {
         if (hasScreen()) {
-            screen.up();
+            screenStack.peek().up();
         }
     }
 
     public void down() {
         if (hasScreen()) {
-            screen.down();
+            screenStack.peek().down();
         }
     }
 
     public void top() {
         if (hasScreen()) {
-            screen.top();
+            screenStack.peek().top();
         }
     }
 
     public void bottom() {
         if (hasScreen()) {
-            screen.bottom();
+            screenStack.peek().bottom();
         }
     }
 
     public void render(Vector2f uiDimensions) {
         if (hasScreen()) {
-            screen.blit(uiDimensions.x, uiDimensions.y);
+            screenStack.peek().blit(uiDimensions.x, uiDimensions.y);
         }
-
         Fonts.render();
     }
 }

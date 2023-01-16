@@ -46,6 +46,9 @@ public class Input extends InputManager{
             else if (key == GLFW.GLFW_KEY_ENTER) {
                 overlay.trigger();
             }
+            else if (key == GLFW.GLFW_KEY_ESCAPE) {
+                game.escape();
+            }
             else if (key == GLFW.GLFW_KEY_UP) {
                 overlay.up();
             }
@@ -114,6 +117,9 @@ public class Input extends InputManager{
         if (action == GLFW.GLFW_PRESS) {
             if (button == GLFW.GLFW_GAMEPAD_BUTTON_A) {
                 overlay.trigger();
+            }
+            else if (button == GLFW.GLFW_GAMEPAD_BUTTON_B) {
+                game.escape();
             }
             else if (button == GLFW.GLFW_GAMEPAD_BUTTON_DPAD_DOWN) {
                 overlay.down();
