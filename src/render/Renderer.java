@@ -19,6 +19,9 @@ public class Renderer implements IFramebufferSizeListener {
     private final Texture mapBackground = new Texture("map_background.png");
     //START-TEST_get_a_menu_background-1of2
     private final Texture mainMenuBackground = new Texture("main_menu_background.png");
+    //nicer_one
+//COMMENT: will need to download instead as link seems not supported.
+//    private final Texture mainMenuBackground = new Texture("https://get.pxhere.com/photo/horizon-sky-wood-track-railway-railroad-bridge-highway-country-transport-green-vehicle-blue-straight-trees-tracks-hills-train-tracks-rail-transport-railway-tracks-railroad-tracks-railroad-bridge-rolling-stock-971413.jpg");
     //END-TEST_get_a_menu_background-1of2
     private int width;
     private int height;
