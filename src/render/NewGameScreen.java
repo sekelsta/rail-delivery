@@ -6,77 +6,40 @@ import traingame.engine.render.gui.*;
 import traingame.engine.render.text.BitmapFont;
 import traingame.Game;
 
-public class NewGameScreen {
-    final int INVALID = -1;
-
+public class NewGameScreen extends Screen {
     TextButton ready;
     TextButton exit;
-
-    ArrayList<GuiElement> selectable;
-    int selected = INVALID;
 
     public NewGameScreen(Game game) {
         BitmapFont font = Fonts.getButtonFont();
         ready = new TextButton(font, "Ready", () -> game.enterWorld());
         exit = new TextButton(font, "Exit", () -> game.stop());
 
-        selectable = new ArrayList<>();
         selectable.add(ready);
         selectable.add(exit);
     }
 
-    private void select(GuiElement element) {
-        for (int i = 0; i < selectable.size(); ++i) {
-            if (selectable.get(i).equals(element)) {
-                selected = i;
-            }
-        }
-    }
-
-    public void positionPointer(double xPos, double yPos) {
-        for (int i = 0; i < selectable.size(); ++i) {
-            if (selectable.get(i).containsPoint(xPos, yPos)) {
-                selected = i;
-            }
-        }
-    }
-
-    public GuiElement getSelected() {
-        if (selected == INVALID) {
-            return null;
-        }
-        return selectable.get(selected);
-    }
-
-    public boolean trigger() {
-        GuiElement selected = getSelected();
-        if (selected != null) {
-            return selected.trigger();
-        }
-        return false;
-    }
-
-    public boolean click(double xPos, double yPos) {
-        positionPointer(xPos, yPos);
-        return trigger();
-    }
-
+    @Override
     public void up() {
         // TODO
     }
 
+    @Override
     public void down() {
         // TODO
     }
 
+    @Override
     public void top() {
         // TODO
     }
 
+    @Override
     public void bottom() {
         select(ready);
     }
 
+    @Override
     public void blit(double screenWidth, double screenHeight)
     {
         BitmapFont font = Fonts.getButtonFont();

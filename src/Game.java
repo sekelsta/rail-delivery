@@ -108,4 +108,8 @@ public class Game implements ILoopable {
     public boolean isInGame() {
         return world != null;
     }
+
+    public void escape() {
+        overlay.escape(this);
+    }
 }
