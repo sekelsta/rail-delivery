@@ -17,6 +17,9 @@ public class Renderer implements IFramebufferSizeListener {
     private final Vector2f uiDimensions = new Vector2f(1, 1);
     private final SpriteBatch spriteBatch = new SpriteBatch();
     private final Texture mapBackground = new Texture("map_background.png");
+    //START-TEST_get_a_menu_background-1of2
+    private final Texture mainMenuBackground = new Texture("main_menu_background.png");
+    //END-TEST_get_a_menu_background-1of2
     private int width;
     private int height;
 
@@ -44,6 +47,13 @@ public class Renderer implements IFramebufferSizeListener {
             spriteBatch.blitScaled(0, 0, width, height, 0, 0, mapBackground.getWidth(), mapBackground.getHeight());
             spriteBatch.render();
         }
+        //START-TEST_get_a_menu_background-2of2
+        else {
+            spriteBatch.setTexture(mainMenuBackground);
+            spriteBatch.blitScaled(0, 0, width, height, 0, 0, mainMenuBackground.getWidth(), mainMenuBackground.getHeight());
+            spriteBatch.render();
+        }
+        //END-TEST_get_a_menu_background-2of2
 
         // Render UI
         overlay.render(uiDimensions);

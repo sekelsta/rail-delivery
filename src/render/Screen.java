@@ -21,6 +21,7 @@ public abstract class Screen {
     }
 
     public void positionPointer(double xPos, double yPos) {
+        selected = INVALID;
         for (int i = 0; i < selectable.size(); ++i) {
             if (selectable.get(i).containsPoint(xPos, yPos)) {
                 selected = i;
