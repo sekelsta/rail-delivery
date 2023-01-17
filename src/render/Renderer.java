@@ -17,6 +17,7 @@ public class Renderer implements IFramebufferSizeListener {
     private final Vector2f uiDimensions = new Vector2f(1, 1);
     private final SpriteBatch spriteBatch = new SpriteBatch();
     private final Texture mapBackground = new Texture("map_background.png");
+    private final Texture mainMenuBackground = new Texture("main_menu_background.png");
     private int width;
     private int height;
 
@@ -42,6 +43,11 @@ public class Renderer implements IFramebufferSizeListener {
             spriteBatch.setTexture(mapBackground);
             // TODO: Adjust so the aspect ratio is not distorted
             spriteBatch.blitScaled(0, 0, width, height, 0, 0, mapBackground.getWidth(), mapBackground.getHeight());
+            spriteBatch.render();
+        }
+        else {
+            spriteBatch.setTexture(mainMenuBackground);
+            spriteBatch.blitScaled(0, 0, width, height, 0, 0, mainMenuBackground.getWidth(), mainMenuBackground.getHeight());
             spriteBatch.render();
         }
 
