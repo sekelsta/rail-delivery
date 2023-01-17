@@ -17,12 +17,7 @@ public class Renderer implements IFramebufferSizeListener {
     private final Vector2f uiDimensions = new Vector2f(1, 1);
     private final SpriteBatch spriteBatch = new SpriteBatch();
     private final Texture mapBackground = new Texture("map_background.png");
-    //START-TEST_get_a_menu_background-1of2
     private final Texture mainMenuBackground = new Texture("main_menu_background.png");
-    //nicer_one
-//COMMENT: will need to download instead as link seems not supported.
-//    private final Texture mainMenuBackground = new Texture("https://get.pxhere.com/photo/horizon-sky-wood-track-railway-railroad-bridge-highway-country-transport-green-vehicle-blue-straight-trees-tracks-hills-train-tracks-rail-transport-railway-tracks-railroad-tracks-railroad-bridge-rolling-stock-971413.jpg");
-    //END-TEST_get_a_menu_background-1of2
     private int width;
     private int height;
 
@@ -50,13 +45,11 @@ public class Renderer implements IFramebufferSizeListener {
             spriteBatch.blitScaled(0, 0, width, height, 0, 0, mapBackground.getWidth(), mapBackground.getHeight());
             spriteBatch.render();
         }
-        //START-TEST_get_a_menu_background-2of2
         else {
             spriteBatch.setTexture(mainMenuBackground);
             spriteBatch.blitScaled(0, 0, width, height, 0, 0, mainMenuBackground.getWidth(), mainMenuBackground.getHeight());
             spriteBatch.render();
         }
-        //END-TEST_get_a_menu_background-2of2
 
         // Render UI
         overlay.render(uiDimensions);
