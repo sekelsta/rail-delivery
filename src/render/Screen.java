@@ -2,6 +2,7 @@ package traingame.render;
 
 import java.util.*;
 
+import traingame.engine.render.SpriteBatch;
 import traingame.engine.render.gui.*;
 import traingame.engine.render.text.BitmapFont;
 import traingame.Game;
@@ -76,5 +77,5 @@ public abstract class Screen {
         }
     }
 
-    public abstract void blit(double screenWidth, double screenHeight);
+    public abstract void blit(SpriteBatch spriteBatch, double screenWidth, double screenHeight);
 }

@@ -2,6 +2,7 @@ package traingame.engine.render.gui;
 
 import java.awt.Color;
 
+import traingame.engine.render.SpriteBatch;
 import traingame.engine.render.text.BitmapFont;
 
 public class TextElement extends GuiElement {
@@ -37,7 +38,7 @@ public class TextElement extends GuiElement {
     }
 
     @Override
-    public void blit(boolean focused) {
+    public void blit(SpriteBatch spriteBatch, boolean focused) {
         font.blit(text, x, y, color.getRed()/255f, color.getGreen()/255f, color.getBlue()/255f);
     }
 }

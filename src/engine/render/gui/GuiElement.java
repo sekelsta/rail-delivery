@@ -2,6 +2,8 @@ package traingame.engine.render.gui;
 
 import java.awt.Color;
 
+import traingame.engine.render.SpriteBatch;
+
 public abstract class GuiElement {
     public static final Color GRAY = new Color(0.5f, 0.5f, 0.5f);
 
@@ -31,13 +33,5 @@ public abstract class GuiElement {
         return false;
     }
 
-    public void inputCharacter(char character) {
-        // Do nothing
-    }
-
-    public void backspace() {
-        // Do nothing
-    }
-
-    public abstract void blit(boolean focused);
+    public abstract void blit(SpriteBatch spriteBatch, boolean focused);
 }

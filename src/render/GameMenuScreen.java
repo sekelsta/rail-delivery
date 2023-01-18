@@ -2,6 +2,7 @@ package traingame.render;
 
 import java.util.*;
 
+import traingame.engine.render.SpriteBatch;
 import traingame.engine.render.gui.*;
 import traingame.engine.render.text.BitmapFont;
 import traingame.Game;
@@ -14,7 +15,7 @@ public class GameMenuScreen extends Screen {
     }
 
     @Override
-    public void blit(double screenWidth, double screenHeight)
+    public void blit(SpriteBatch spriteBatch, double screenWidth, double screenHeight)
     {
         BitmapFont font = Fonts.getButtonFont();
 
@@ -31,7 +32,7 @@ public class GameMenuScreen extends Screen {
         for (GuiElement item : selectable) {
             int xPos = ((int)screenWidth - item.getWidth()) / 2;
             item.position(xPos, yPos);
-            item.blit(item == selected);
+            item.blit(spriteBatch, item == selected);
             yPos += (int)(1.25 * item.getHeight());
         }
     }

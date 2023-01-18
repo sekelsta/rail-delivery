@@ -52,7 +52,7 @@ public class Renderer implements IFramebufferSizeListener {
         }
 
         // Render UI
-        overlay.render(uiDimensions);
+        overlay.render(spriteBatch, uiDimensions);
     }
 
     @Override

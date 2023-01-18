@@ -103,9 +103,9 @@ public class Overlay {
         }
     }
 
-    public void render(Vector2f uiDimensions) {
+    public void render(SpriteBatch spriteBatch, Vector2f uiDimensions) {
         if (hasScreen()) {
-            screenStack.peek().blit(uiDimensions.x, uiDimensions.y);
+            screenStack.peek().blit(spriteBatch, uiDimensions.x, uiDimensions.y);
         }
         Fonts.render();
     }
