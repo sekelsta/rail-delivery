@@ -11,6 +11,8 @@ import traingame.engine.render.SpriteBatch;
 import traingame.engine.render.Texture;
 import traingame.World;
 import shadowfox.math.*;
+import java.lang.Math.*;
+import traingame.Terrain;
 
 public class Renderer implements IFramebufferSizeListener {
     private final ShaderProgram shader2D = ShaderProgram.load("/shaders/2d.vsh", "/shaders/2d.fsh");
@@ -20,6 +22,30 @@ public class Renderer implements IFramebufferSizeListener {
     private final Texture mainMenuBackground = new Texture("main_menu_background.png");
     private int width;
     private int height;
+    private final double Q_BASIS_X = Math.sqrt(3);
+    private final double Q_BASIS_Y = 0;
+    private final double R_BASIS_X = Math.sqrt(3)/2;
+    private final double R_BASIS_Y = 3./2;
+
+    //Adding Hexagon Terrain Support
+    private final Texture mountainTexture = new Texture("terrain/mountain.png");
+    private final Texture plainTexture = new Texture("terrain/plain.png");
+    private final Texture forestTexture = new Texture("terrain/forest.png");
+
+    // Note:
+    // width-to-height ratio of a regular hexagon (pointy top) is 1:1.1547005383792515290182975610039.
+    // or more exactly:  1:sqrt(4/3)
+    // for best results use ints that closely match this ratio.
+    //(This ends up as a 24 and 28 pair) (40 and 46 would be even closer, though might be too big)
+    private int hexWidth = 24;
+    private int hexHeight = (int)Math.round(hexWidth * Math.sqrt(4/3.));
+
+    //or change to 0 to remove spacing, although that looks ugly.
+    //Alternately, perhaps images used should just have a few blank pixels along edges.
+    private int spacing = (int)Math.round((1*Math.min(hexWidth, hexHeight) / 10.));
+
+    private double drawSizeFactor = (1 / Q_BASIS_X) * (hexWidth + spacing);
+
 
     public Renderer() {
         // Enable alpha blending (over)
@@ -28,6 +54,24 @@ public class Renderer implements IFramebufferSizeListener {
 
         GL11.glEnable(GL11.GL_CULL_FACE);
         GL11.glClearColor(1f, 1f, 1f, 1f);
+    }
+
+    // q is used to find the pixel coordinates for rectangular mapping of x and y using the below formulas/functions.
+    public int getQ(int x, int y) {
+        return x - (y / 2);
+    }    
+    //r is simply the same as y.
+
+    public int getPixelX(int x, int y, double drawSizeFactor, double spacing) {
+        return (int)Math.round(( drawSizeFactor * ( (getQ(x,y) * Q_BASIS_X) + (y * R_BASIS_X)) ) );
+    }
+
+    public int getPixelY(int x, int y, double drawSizeFactor, double spacing) {
+        return (int)Math.round(( drawSizeFactor * ( (getQ(x,y) * Q_BASIS_Y) + (y * R_BASIS_Y)) ) );
+    }
+
+    public String getPrintableHexSize() {
+        return "(" + hexWidth + ", " + hexHeight + ")";
     }
 
     public void render(float lerp, World world, Overlay overlay) {
@@ -44,6 +88,28 @@ public class Renderer implements IFramebufferSizeListener {
             // TODO: Adjust so the aspect ratio is not distorted
             spriteBatch.blitScaled(0, 0, width, height, 0, 0, mapBackground.getWidth(), mapBackground.getHeight());
             spriteBatch.render();
+
+            for (int y = 0; y < world.mapHeight; y++) {
+                for (int x = 0; x < world.mapWidth; x++) {
+                    Terrain terrain = world.getTerrain(x,y);
+                    int locX = getPixelX(x,y,drawSizeFactor,spacing);
+                    int locY = getPixelY(x,y,drawSizeFactor,spacing);
+
+                    if (terrain == Terrain.MOUNTAIN){
+                        spriteBatch.setTexture(mountainTexture);
+                        spriteBatch.blitScaled(locX, locY, hexWidth, hexHeight, 0, 0, mountainTexture.getWidth(), mountainTexture.getHeight());
+                    }
+                    else if (terrain == Terrain.PLAIN){
+                        spriteBatch.setTexture(plainTexture);
+                        spriteBatch.blitScaled(locX, locY, hexWidth, hexHeight, 0, 0, plainTexture.getWidth(), plainTexture.getHeight());
+                    }
+                    else if (terrain == Terrain.FOREST){
+                        spriteBatch.setTexture(forestTexture);
+                        spriteBatch.blitScaled(locX, locY, hexWidth, hexHeight, 0, 0, forestTexture.getWidth(), forestTexture.getHeight());
+                    }
+                    spriteBatch.render();
+                }
+            }
         }
         else {
             spriteBatch.setTexture(mainMenuBackground);
@@ -64,7 +130,7 @@ public class Renderer implements IFramebufferSizeListener {
         this.width = width;
         this.height = height;
 
-        // This is the size of UI's canvas, so the scale is inversly proportional to actual element size
+        // This is the size of UI's canvas, so the scale is inversely proportional to actual element size
         float uiScale = (float)Overlay.getScale();
         uiDimensions.x = width * uiScale;
         uiDimensions.y = height * uiScale;
