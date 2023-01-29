@@ -92,9 +92,16 @@ public class World {
         return theCitiesOnMap;
     }
 
-    public Terrain getTerrain(int x, int y) {
+    public Terrain getTerrainXY(int x, int y) {
         return map[x][y];
     }
+
+    // TODO:  Delete if still not used
+    // Convert from offset coordinates to axial coordinates
+    private int getQ(int x, int y) {
+        return x - (y / 2);
+    }
+    // r is simply the same as y.
 
     public void update() {
         // TODO

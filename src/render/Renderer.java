@@ -19,35 +19,14 @@ public class Renderer implements IFramebufferSizeListener {
     private final Vector2f uiDimensions = new Vector2f(1, 1);
     private final SpriteBatch spriteBatch = new SpriteBatch();
     private final Texture mapBackground = new Texture("map_background.png");
+    private final Texture terrainTexture = new Texture("tiles.png");
+    private final Texture mainMenuBackground = new Texture("main_menu_background.png");
     private final int MAP_PIXELS_WIDE = mapBackground.getWidth();
     private final int MAP_PIXELS_HIGH = mapBackground.getHeight();
-    private final Texture mainMenuBackground = new Texture("main_menu_background.png");
+    private static final int HEX_WIDTH = 40;
+    private static final int HEX_HEIGHT = 48;
     private int width;
     private int height;
-    private final double Q_BASIS_X = Math.sqrt(3);
-    private final double Q_BASIS_Y = 0;
-    private final double R_BASIS_X = Math.sqrt(3)/2;
-    private final double R_BASIS_Y = 3./2;
-
-    //Adding Hexagon Terrain Support
-    private final Texture mountainTexture = new Texture("terrain/mountain.png");
-    private final Texture plainTexture = new Texture("terrain/plain.png");
-    private final Texture forestTexture = new Texture("terrain/forest.png");
-
-    // Note:
-    // width-to-height ratio of a regular hexagon (pointy top) is 1:1.1547005383792515290182975610039.
-    // or more exactly:  1:sqrt(4/3)
-    // for best results use ints that closely match this ratio.
-    //(This ends up as a 24 and 28 pair) (40 and 46 would be even closer, though might be too big)
-    private int hexWidth = 24;
-    private int hexHeight = (int)Math.round(hexWidth * Math.sqrt(4/3.));
-
-    //or change to 0 to remove spacing, although that looks ugly.
-    //Alternately, perhaps images used should just have a few blank pixels along edges.
-    private int spacing = (int)Math.round((1*Math.min(hexWidth, hexHeight) / 10.));
-
-    private double drawSizeFactor = (1 / Q_BASIS_X) * (hexWidth + spacing);
-
 
     public Renderer() {
         // Enable alpha blending (over)
@@ -56,24 +35,22 @@ public class Renderer implements IFramebufferSizeListener {
 
         GL11.glEnable(GL11.GL_CULL_FACE);
         GL11.glClearColor(1f, 1f, 1f, 1f);
+
+        //GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
+        //GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
     }
 
-    // q is used to find the pixel coordinates for rectangular mapping of x and y using the below formulas/functions.
-    public int getQ(int x, int y) {
-        return x - (y / 2);
-    }    
-    //r is simply the same as y.
-
-    public int getPixelX(int x, int y, double drawSizeFactor, double spacing) {
-        return (int)Math.round(( drawSizeFactor * ( (getQ(x,y) * Q_BASIS_X) + (y * R_BASIS_X)) ) );
+    public int getPixelX(int x, int y) {
+        int q = x - (y / 2);
+        return (int)Math.round(HEX_WIDTH * (q + y / 2f));
     }
 
-    public int getPixelY(int x, int y, double drawSizeFactor, double spacing) {
-        return (int)Math.round(( drawSizeFactor * ( (getQ(x,y) * Q_BASIS_Y) + (y * R_BASIS_Y)) ) );
+    public int getPixelY(int x, int y) {
+        return y * (int)Math.round(HEX_WIDTH * Math.sqrt(3) / 2f);
     }
 
     public String getPrintableHexSize() {
-        return "(" + hexWidth + ", " + hexHeight + ")";
+        return "(" + HEX_WIDTH + ", " + HEX_HEIGHT + ")";
     }
 
     public void render(float lerp, World world, Overlay overlay) {
@@ -135,23 +112,21 @@ public class Renderer implements IFramebufferSizeListener {
         spriteBatch.blit(0, 0, MAP_PIXELS_WIDE, MAP_PIXELS_HIGH, mapBackground.getWidth(), mapBackground.getHeight());
         spriteBatch.render();
 
+        spriteBatch.setTexture(terrainTexture);
         for (int y = 0; y < world.mapHeight; y++) {
             for (int x = 0; x < world.mapWidth; x++) {
-                Terrain terrain = world.getTerrain(x,y);
-                int locX = getPixelX(x,y,drawSizeFactor,spacing);
-                int locY = getPixelY(x,y,drawSizeFactor,spacing);
+                Terrain terrain = world.getTerrainXY(x,y);
+                int locX = getPixelX(x, y);
+                int locY = getPixelY(x, y);
 
                 if (terrain == Terrain.MOUNTAIN){
-                    spriteBatch.setTexture(mountainTexture);
-                    spriteBatch.blitScaled(locX, locY, hexWidth, hexHeight, 0, 0, mountainTexture.getWidth(), mountainTexture.getHeight());
+                    spriteBatch.blit(locX, locY, HEX_WIDTH, HEX_HEIGHT, 247, 232);
                 }
                 else if (terrain == Terrain.PLAIN){
-                    spriteBatch.setTexture(plainTexture);
-                    spriteBatch.blitScaled(locX, locY, hexWidth, hexHeight, 0, 0, plainTexture.getWidth(), plainTexture.getHeight());
+                    spriteBatch.blit(locX, locY, HEX_WIDTH, HEX_HEIGHT, 124, 232);
                 }
                 else if (terrain == Terrain.FOREST){
-                    spriteBatch.setTexture(forestTexture);
-                    spriteBatch.blitScaled(locX, locY, hexWidth, hexHeight, 0, 0, forestTexture.getWidth(), forestTexture.getHeight());
+                    spriteBatch.blit(locX, locY, HEX_WIDTH, HEX_HEIGHT, 165, 232);
                 }
                 spriteBatch.render();
             }
