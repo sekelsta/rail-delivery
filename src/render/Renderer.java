@@ -20,11 +20,15 @@ public class Renderer implements IFramebufferSizeListener {
     private final SpriteBatch spriteBatch = new SpriteBatch();
     private final Texture mapBackground = new Texture("map_background.png");
     private final Texture terrainTexture = new Texture("tiles.png");
-    private final Texture mainMenuBackground = new Texture("main_menu_background.png");
-    private final int MAP_PIXELS_WIDE = mapBackground.getWidth();
-    private final int MAP_PIXELS_HIGH = mapBackground.getHeight();
+    //private final Texture terrainTexture = new Texture("terrain.png");
+    private final int MAP_PIXELS_WIDE = 868;
+    private final int MAP_PIXELS_HIGH = 779;/*
+    private static final int HEX_WIDTH = 8;
+    private static final int HEX_HEIGHT = 8;
+    private static final int HEX_ROW_HEIGHT = 6;*/
     private static final int HEX_WIDTH = 40;
     private static final int HEX_HEIGHT = 48;
+    private static final int HEX_ROW_HEIGHT = 36;
     private int width;
     private int height;
 
@@ -36,21 +40,16 @@ public class Renderer implements IFramebufferSizeListener {
         GL11.glEnable(GL11.GL_CULL_FACE);
         GL11.glClearColor(1f, 1f, 1f, 1f);
 
-        //GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
-        //GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+        assert(HEX_WIDTH % 2 == 0);
     }
 
     public int getPixelX(int x, int y) {
-        int q = x - (y / 2);
-        return (int)Math.round(HEX_WIDTH * (q + y / 2f));
+        int halfWidth = HEX_WIDTH / 2;
+        return halfWidth * (2 * x + y % 2);
     }
 
     public int getPixelY(int x, int y) {
-        return y * (int)Math.round(HEX_WIDTH * Math.sqrt(3) / 2f);
-    }
-
-    public String getPrintableHexSize() {
-        return "(" + HEX_WIDTH + ", " + HEX_HEIGHT + ")";
+        return y * HEX_ROW_HEIGHT;
     }
 
     public void render(float lerp, World world, Overlay overlay) {
@@ -72,11 +71,6 @@ public class Renderer implements IFramebufferSizeListener {
                 reservedBottom = 200;
             }
             renderWorld(lerp, world, reservedLeft, reservedBottom);
-        }
-        else {
-            spriteBatch.setTexture(mainMenuBackground);
-            spriteBatch.blitScaled(0, 0, width, height, 0, 0, mainMenuBackground.getWidth(), mainMenuBackground.getHeight());
-            spriteBatch.render();
         }
 
         // Render UI
@@ -107,10 +101,12 @@ public class Renderer implements IFramebufferSizeListener {
         shader2D.setFloat("top_margin", heightDiff / 2 / uiDimensions.y);
         shader2D.setFloat("bottom_margin", (heightDiff - heightDiff / 2 + reservedBottom) / uiDimensions.y);
 
-
         spriteBatch.setTexture(mapBackground);
         spriteBatch.blit(0, 0, MAP_PIXELS_WIDE, MAP_PIXELS_HIGH, mapBackground.getWidth(), mapBackground.getHeight());
         spriteBatch.render();
+
+        // Pixelate hex textures for style
+        shader2D.setUniform("dimensions", new Vector2f(MAP_PIXELS_WIDE / 2, MAP_PIXELS_HIGH / 2));
 
         spriteBatch.setTexture(terrainTexture);
         for (int y = 0; y < world.mapHeight; y++) {
@@ -119,14 +115,17 @@ public class Renderer implements IFramebufferSizeListener {
                 int locX = getPixelX(x, y);
                 int locY = getPixelY(x, y);
 
-                if (terrain == Terrain.MOUNTAIN){
+                if (terrain == Terrain.MOUNTAIN) {
                     spriteBatch.blit(locX, locY, HEX_WIDTH, HEX_HEIGHT, 247, 232);
+                    //spriteBatch.blit(locX, locY, HEX_WIDTH, HEX_HEIGHT, 0, 0);
                 }
-                else if (terrain == Terrain.PLAIN){
+                else if (terrain == Terrain.PLAIN) {
                     spriteBatch.blit(locX, locY, HEX_WIDTH, HEX_HEIGHT, 124, 232);
+                    //spriteBatch.blit(locX, locY, HEX_WIDTH, HEX_HEIGHT, 0, 0);
                 }
-                else if (terrain == Terrain.FOREST){
+                else if (terrain == Terrain.FOREST) {
                     spriteBatch.blit(locX, locY, HEX_WIDTH, HEX_HEIGHT, 165, 232);
+                    //spriteBatch.blit(locX, locY, HEX_WIDTH, HEX_HEIGHT, 0, 0);
                 }
                 spriteBatch.render();
             }
