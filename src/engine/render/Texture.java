@@ -23,7 +23,7 @@ public class Texture {
         if (!isPowerOfTwo(image.getWidth()) || !isPowerOfTwo(image.getHeight())) {
             throw new RuntimeException("Size of texture " + name + " is not a power of two");
         }
-        init(image, true);
+        init(image, false);
     }
 
     public Texture(Color color) {
@@ -85,10 +85,13 @@ public class Texture {
         this.width = image.getWidth();
         this.height = image.getHeight();
 
-        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, pixels);
+        if (!needsMipmaps) {
+            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
+            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+        }
 
-        // TO_OPTIMIZE: set blend mode that doesn't expect mipmaps for these
-        if (true || needsMipmaps) {
+        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, pixels);
+        if (needsMipmaps) {
             GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
         }
     }
