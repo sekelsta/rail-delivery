@@ -17,7 +17,7 @@ void main()
 {
     texture_coord = in_texture;
     color = in_color;
-    float x = position.x / dimensions.x * (1.0 - left_margin - right_margin) + left_margin;
-    float y = position.y / dimensions.y * (1.0 - top_margin - bottom_margin) - top_margin;
-    gl_Position = vec4(x * 2 - 1, y * 2 + 1, 0.0, 1.0);
+    gl_Position = vec4((position.x / dimensions.x * (1.0 - left_margin - right_margin) + left_margin) * 2 - 1,
+        (position.y / dimensions.y * (1.0 - top_margin - bottom_margin) - top_margin) * 2 + 1,
+        0.0, 1.0);
 }

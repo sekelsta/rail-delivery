@@ -19,16 +19,15 @@ public class Renderer implements IFramebufferSizeListener {
     private final Vector2f uiDimensions = new Vector2f(1, 1);
     private final SpriteBatch spriteBatch = new SpriteBatch();
     private final Texture mapBackground = new Texture("map_background.png");
-    private final Texture terrainTexture = new Texture("tiles.png");
-    //private final Texture terrainTexture = new Texture("terrain.png");
+    private final Texture terrainTexture = new Texture("terrain.png");
+
     private final int MAP_PIXELS_WIDE = 868;
-    private final int MAP_PIXELS_HIGH = 779;/*
-    private static final int HEX_WIDTH = 8;
-    private static final int HEX_HEIGHT = 8;
-    private static final int HEX_ROW_HEIGHT = 6;*/
-    private static final int HEX_WIDTH = 40;
-    private static final int HEX_HEIGHT = 48;
-    private static final int HEX_ROW_HEIGHT = 36;
+    private final int MAP_PIXELS_HIGH = 779;
+
+    private static final int HEX_WIDTH = 14;
+    private static final int HEX_HEIGHT = 16;
+    private static final int HEX_ROW_HEIGHT = 12;
+
     private int width;
     private int height;
 
@@ -95,7 +94,7 @@ public class Renderer implements IFramebufferSizeListener {
             widthDiff = mapScreenWidth - (int)(aspectRatio * mapScreenHeight);
         }
 
-        shader2D.setUniform("dimensions", new Vector2f(MAP_PIXELS_WIDE, MAP_PIXELS_HIGH));
+        shader2D.setUniform("dimensions", new Vector2f(MAP_PIXELS_WIDE / 2, MAP_PIXELS_HIGH / 2));
         shader2D.setFloat("left_margin", (reservedLeft + widthDiff / 2) / uiDimensions.x);
         shader2D.setFloat("right_margin", (widthDiff - (widthDiff / 2)) / uiDimensions.x);
         shader2D.setFloat("top_margin", heightDiff / 2 / uiDimensions.y);
@@ -105,9 +104,6 @@ public class Renderer implements IFramebufferSizeListener {
         spriteBatch.blit(0, 0, MAP_PIXELS_WIDE, MAP_PIXELS_HIGH, mapBackground.getWidth(), mapBackground.getHeight());
         spriteBatch.render();
 
-        // Pixelate hex textures for style
-        shader2D.setUniform("dimensions", new Vector2f(MAP_PIXELS_WIDE / 2, MAP_PIXELS_HIGH / 2));
-
         spriteBatch.setTexture(terrainTexture);
         for (int y = 0; y < world.mapHeight; y++) {
             for (int x = 0; x < world.mapWidth; x++) {
@@ -116,16 +112,13 @@ public class Renderer implements IFramebufferSizeListener {
                 int locY = getPixelY(x, y);
 
                 if (terrain == Terrain.MOUNTAIN) {
-                    spriteBatch.blit(locX, locY, HEX_WIDTH, HEX_HEIGHT, 247, 232);
-                    //spriteBatch.blit(locX, locY, HEX_WIDTH, HEX_HEIGHT, 0, 0);
+                    spriteBatch.blit(locX, locY, HEX_WIDTH, HEX_HEIGHT, 45, 0);
                 }
                 else if (terrain == Terrain.PLAIN) {
-                    spriteBatch.blit(locX, locY, HEX_WIDTH, HEX_HEIGHT, 124, 232);
-                    //spriteBatch.blit(locX, locY, HEX_WIDTH, HEX_HEIGHT, 0, 0);
+                    spriteBatch.blit(locX, locY, HEX_WIDTH, HEX_HEIGHT, 15, 0);
                 }
                 else if (terrain == Terrain.FOREST) {
-                    spriteBatch.blit(locX, locY, HEX_WIDTH, HEX_HEIGHT, 165, 232);
-                    //spriteBatch.blit(locX, locY, HEX_WIDTH, HEX_HEIGHT, 0, 0);
+                    spriteBatch.blit(locX, locY, HEX_WIDTH, HEX_HEIGHT, 30, 0);
                 }
                 spriteBatch.render();
             }
