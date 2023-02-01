@@ -88,7 +88,7 @@ public class World {
         return theCitiesOnMap;
     }
 
-    public Terrain getTerrain(int x, int y) {
+    public Terrain getTerrainXY(int x, int y) {
         return map[x][y];
     }
 
