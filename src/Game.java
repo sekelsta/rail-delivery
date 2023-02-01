@@ -74,9 +74,6 @@ public class Game implements ILoopable {
         if (input != null) {
             input.update();
         }
-        if (world != null) {
-            world.update();
-        }
     }
 
     @Override

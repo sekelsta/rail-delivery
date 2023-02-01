@@ -105,8 +105,4 @@ public class World {
             Log.debug(CargoOrder.getRandom(cities).toString());
         }
     }
-
-    public void update() {
-        // TODO
-    }
 }
