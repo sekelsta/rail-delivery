@@ -20,9 +20,8 @@ public class Renderer implements IFramebufferSizeListener {
     private final SpriteBatch spriteBatch = new SpriteBatch();
     private final Texture terrainTexture = new Texture("terrain.png");
     private final Texture mapBackground = new Texture("map_background.png");
-    private final int MAP_PIXELS_WIDE = mapBackground.getWidth();
-    private final int MAP_PIXELS_HIGH = mapBackground.getHeight();
-    private final Texture mainMenuBackground = new Texture("main_menu_background.png");
+    private final int MAP_PIXELS_WIDE = 868;
+    private final int MAP_PIXELS_HIGH = 779;
     private int width;
     private int height;
     private final double Q_BASIS_X = Math.sqrt(3);
@@ -68,10 +67,6 @@ public class Renderer implements IFramebufferSizeListener {
         return (int)Math.round(( drawSizeFactor * ( (getQ(x,y) * Q_BASIS_Y) + (y * R_BASIS_Y)) ) );
     }
 
-    public String getPrintableHexSize() {
-        return "(" + hexWidth + ", " + hexHeight + ")";
-    }
-
     public void render(float lerp, World world, Overlay overlay) {
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 
@@ -91,11 +86,6 @@ public class Renderer implements IFramebufferSizeListener {
                 reservedBottom = 200;
             }
             renderWorld(lerp, world, reservedLeft, reservedBottom);
-        }
-        else {
-            spriteBatch.setTexture(mainMenuBackground);
-            spriteBatch.blitScaled(0, 0, width, height, 0, 0, mainMenuBackground.getWidth(), mainMenuBackground.getHeight());
-            spriteBatch.render();
         }
 
         // Render UI
