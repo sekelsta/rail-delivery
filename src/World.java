@@ -92,6 +92,12 @@ public class World {
         return map[x][y];
     }
 
+    // Convert from offset coordinates to axial coordinates
+    private int getQ(int x, int y) {
+        return x - (y / 2);
+    }
+    // r is simply the same as y.
+
     public void runTests() {
         Log.debug("");
         Log.debug("Condensed city info:");
