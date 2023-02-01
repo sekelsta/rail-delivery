@@ -21,8 +21,7 @@ public class Texture {
     public Texture(String name) {
         BufferedImage image = ImageUtils.loadResource(TEXTURE_LOCATION + name);
         if (!isPowerOfTwo(image.getWidth()) || !isPowerOfTwo(image.getHeight())) {
-            // DEBUG
-            //throw new RuntimeException("Size of texture " + name + " is not a power of two");
+            throw new RuntimeException("Size of texture " + name + " is not a power of two");
         }
         init(image, true);
     }
@@ -85,7 +84,9 @@ public class Texture {
     private void internalUpdate(BufferedImage image, boolean needsMipmaps) {
         this.width = image.getWidth();
         this.height = image.getHeight();
+
         GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, pixels);
+
         // TO_OPTIMIZE: set blend mode that doesn't expect mipmaps for these
         if (true || needsMipmaps) {
             GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
