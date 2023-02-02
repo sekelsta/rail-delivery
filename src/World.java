@@ -21,12 +21,8 @@ public class World {
 
         cities = readCitiesFromFile("/assets/data/map-EasternUS.txt").toArray(new City[0]);
 
-        Log.debug("");
-        Log.debug("Condensed city info:");
-        for (City c : cities) {
-            System.out.println(c.toString());
-        }
-        Log.debug("");
+        runTests(); //Once actual display implementation is achieved, this can be removed.
+
 
         map = new Terrain[mapWidth][mapHeight];
         //TODO: read values from a text file or make a better random map alogrithm.
@@ -94,6 +90,20 @@ public class World {
 
     public Terrain getTerrain(int x, int y) {
         return map[x][y];
+    }
+
+    public void runTests() {
+        Log.debug("");
+        Log.debug("Condensed city info:");
+        for (City c : cities) {
+            Log.debug(c.toString());
+        }
+
+        Log.debug("");
+        Log.debug("Test Cargo Order Generation:");
+        for (int i=0; i<15; i++) {
+            Log.debug(CargoOrder.getRandom(cities).toString());
+        }
     }
 
     public void update() {
