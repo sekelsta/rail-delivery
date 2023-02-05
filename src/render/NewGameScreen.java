@@ -2,11 +2,12 @@ package traingame.render;
 
 import java.util.*;
 
+import traingame.Company;
+import traingame.Game;
 import traingame.engine.render.SpriteBatch;
 import traingame.engine.render.Texture;
 import traingame.engine.render.gui.*;
 import traingame.engine.render.text.BitmapFont;
-import traingame.Game;
 
 public class NewGameScreen extends Screen {
     private ArrayList<GuiElement> left = new ArrayList<>();
@@ -84,12 +85,26 @@ public class NewGameScreen extends Screen {
     }
 
     private void tryEnterWorld(Game game) {
+        List<Company> companyGroup = new ArrayList<>();
+        if (redButton.on) {
+            companyGroup.add(Company.makeRed());
+        }
+        if (greenButton.on) {
+            companyGroup.add(Company.makeGreen());
+        }
+        if (blueButton.on) {
+            companyGroup.add(Company.makeBlue());
+        }
+        if (yellowButton.on) {
+            companyGroup.add(Company.makeYellow());
+        }
+
         // Require at least one button to be selected to start.
         // FUTURE: If/when doing network multi-player we may wish to further restrict this
         // to players being ready.
-        boolean startable = redButton.on || greenButton.on || blueButton.on || yellowButton.on;
+        boolean startable = companyGroup.size() > 0;
         if (startable) {
-            game.enterWorld();
+            game.enterWorld(companyGroup);
         }
         else {
             System.out.println("Select at least one color.");
