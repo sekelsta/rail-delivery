@@ -16,6 +16,7 @@ public class World {
     private Random random = new Random();
 
     public final City[] cities;
+    public final Company[] companies;
     private Terrain[][] map;
 
     private Point hoverHex = null;
@@ -47,6 +48,7 @@ public class World {
             Log.debug(c.toString());
             Log.debug("");
         }
+        this.companies = companies.toArray(new Company[0]);
 
         runTests(); //Once actual display implementation is achieved, this can be removed.
 
