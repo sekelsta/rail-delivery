@@ -1,5 +1,6 @@
 package traingame.engine.render;
 
+import java.awt.Color;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
@@ -74,17 +75,27 @@ public class SpriteBatch extends Mesh {
         blit(x, y, width, height, texX, texY, 1f, 1f, 1f);
     }
 
+    public void blit(int x, int y, int width, int height, int texX, int texY, Color color) {
+        blit(x, y, width, height, texX, texY, color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f);
+    }
+
     // Params: Screen rect, texture x and y to draw from, texture size, and color to draw
     // Will render if the buffer is full, so be sure the texture is bound before calling
     public void blit(int x, int y, int width, int height, int texX, int texY, float red, float green, float blue) {
-        blitScaled(x, y, width, height, texX, texY, width, height, red, green, blue);
+        blitStretched(x, y, width, height, texX, texY, width, height, red, green, blue);
     }
 
-    public void blitScaled(int x, int y, int width, int height, int texX, int texY, int texWidth, int texHeight) {
-        blitScaled(x, y, width, height, texX, texY, texWidth, texHeight, 1f, 1f, 1f);
+    public void blitStretched(int x, int y, int width, int height, int texX, int texY, int texWidth, int texHeight) {
+        blitStretched(x, y, width, height, texX, texY, texWidth, texHeight, 1f, 1f, 1f);
     }
 
-    public void blitScaled(int x, int y, int width, int height, int texX, int texY, int texWidth, int texHeight,
+    public void blitStretched(int x, int y, int width, int height, int texX, int texY, int texWidth, int texHeight, 
+            Color color) {
+        blitStretched(x, y, width, height, texX, texY, texWidth, texHeight, 
+                      color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f);
+    }
+
+    public void blitStretched(int x, int y, int width, int height, int texX, int texY, int texWidth, int texHeight,
             float red, float green, float blue) {
         assert(texture != null);
 

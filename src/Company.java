@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class Company {
     public final String name;
-    private final Color color;
+    public final Color color;
     private List<RailSegment> railNetwork = new ArrayList<>();
     public int trainQ;
     public int trainR;

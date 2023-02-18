@@ -35,7 +35,6 @@ public class Renderer implements IFramebufferSizeListener {
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-        GL11.glEnable(GL11.GL_CULL_FACE);
         GL11.glClearColor(1f, 1f, 1f, 1f);
 
         assert(HEX_WIDTH % 2 == 0);
@@ -178,6 +177,31 @@ public class Renderer implements IFramebufferSizeListener {
                 int locX = getPixelX(p.x(), p.y());
                 int locY = getPixelY(p.x(), p.y());
                 spriteBatch.blit(locX, locY, HEX_WIDTH, HEX_HEIGHT, 75, texY);
+            }
+        }
+
+        for (Company company : world.companies) {
+            for (RailSegment rail : company.getRailNetwork()) {
+                int x = rail.origin().x();
+                int y = rail.origin().y();
+                int locX = getPixelX(x, y);
+                int locY = getPixelY(x, y);
+
+                if (rail.direction() == Direction.EAST) {
+                    spriteBatch.blit(locX + HEX_WIDTH / 2, locY, HEX_WIDTH, HEX_HEIGHT, 0, 34, company.color);
+                }
+                else if (rail.direction() == Direction.SOUTHEAST) {
+                    spriteBatch.blit(locX, locY, 2 * HEX_WIDTH, 2 * HEX_HEIGHT, 15, 34, company.color);
+                }
+                else if (rail.direction() == Direction.SOUTHWEST) {
+                    int width = 2 * HEX_WIDTH;
+                    int height = 2 * HEX_HEIGHT;
+                    spriteBatch.blitStretched(locX + width, locY, -1 * width, height,
+                                              15, 34, width, height, company.color);
+                }
+                else {
+                    assert(false);
+                }
             }
         }
 
