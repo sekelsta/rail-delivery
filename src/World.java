@@ -22,8 +22,6 @@ public class World {
     private Point hoverHex = null;
 
     public World(List<Company> companies) {
-        Log.debug("Generating world with " + companies.size() + " companies.");
-
         cities = readCitiesFromFile("/assets/data/map-EasternUS.txt").toArray(new City[0]);
         int availableCities = cities.length;
         assert(companies.size() <= Game.MAX_PLAYERS);
@@ -36,7 +34,6 @@ public class World {
         ArrayList<City> candidateStartCities = new ArrayList<>(Arrays.asList(cities));
 
         // Finish initializing Companies.
-        Log.debug("\nCompanies (with updated trainQ and trainR)");
         for (Company c : companies) {
             int randomIndex = random.nextInt(candidateStartCities.size());
             City startingCity = candidateStartCities.get(randomIndex);
@@ -44,13 +41,8 @@ public class World {
             candidateStartCities.remove(randomIndex);
             c.trainQ = startingCity.getSpawnPoint().q();
             c.trainR = startingCity.getSpawnPoint().r();
-
-            Log.debug(c.toString());
-            Log.debug("");
         }
         this.companies = companies.toArray(new Company[0]);
-
-        runTests(); //Once actual display implementation is achieved, this can be removed.
 
 
         map = new Terrain[mapWidth][mapHeight];
@@ -82,11 +74,11 @@ public class World {
                     Product currentCityExport = null;
                     List<Point> localPointGroup = new ArrayList<>();
 
-                    for (int i=0; i<entriesInLine; i++) {
-                        if(i==0) {
+                    for (int i = 0; i < entriesInLine; i++) {
+                        if (i == 0) {
                             currentCityName = currentLineSplit[i];
                         }
-                        else if(i==1) {
+                        else if (i == 1) {
                             currentCityExport = Product.valueOf(currentLineSplit[i]);
                         }
                         else {
@@ -102,17 +94,12 @@ public class World {
                     Point[] currentPointGroup = localPointGroup.toArray(new Point[0]);
 
                     //Now use the data to make a city and add it to the City list.
-                    Log.debug("");
-                    Log.debug("Generating City:");
-                    Log.debug("Name: " + currentCityName);
-                    Log.debug("Export: " + currentCityExport);
-                    Log.debug("Locations: " + Arrays.toString(currentPointGroup));
                     City currentCity = new City(currentCityName, currentCityExport, currentPointGroup);
                     theCitiesOnMap.add(currentCity);
                 }
             }
         } catch (Exception e) {
-            Log.debug("Error reading cities from file: " + e.getMessage());
+            throw new RuntimeException(e);
         }
         return theCitiesOnMap;
     }
@@ -132,19 +119,5 @@ public class World {
             return;
         }
         this.hoverHex = hover;
-    }
-
-    public void runTests() {
-        Log.debug("");
-        Log.debug("Condensed city info:");
-        for (City c : cities) {
-            Log.debug(c.toString());
-        }
-
-        Log.debug("");
-        Log.debug("Test Cargo Order Generation:");
-        for (int i=0; i<15; i++) {
-            Log.debug(CargoOrder.getRandom(cities).toString());
-        }
     }
 }
